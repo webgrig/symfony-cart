@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+{#    {{ dump(cart) }}#}
+
+    cartId: {{ cart.getId }} <br> =======================  <br>
+    {% for item in cart.getItems  %}
+        productId: {{ item.getProduct.getId }} <br>
+        productTitle: {{ item.getProduct.getTitle }} <br>
+        productCost: {{ item.getProduct.getCost }} <br>
+        productAmount: {{ item.getAmount }} <br> =======================  <br>
+    {% endfor %}
+    totalCost: {{ cart.getCost }} <br>
+
+
+
+{% endblock %}
