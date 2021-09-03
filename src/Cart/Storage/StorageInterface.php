@@ -20,7 +20,6 @@ interface StorageInterface
 
     /**
      * @param ArrayCollection $items
-     * @param CalculatorInterface $calculator
      */
     public function save(ArrayCollection $items): void;
 
@@ -42,4 +41,13 @@ interface StorageInterface
      * @return ArrayCollection
      */
     public function margeItems(ArrayCollection $first, ArrayCollection $second): object;
+
+    /**
+     * @param string $id
+     * @param int $amount
+     * @param string|null $title
+     * @param float|null $cost
+     * @return ArrayCollection
+     */
+    public function addItem(string $id, int $amount, string $title = null, float $cost = null): object;
 }

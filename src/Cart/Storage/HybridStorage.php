@@ -2,33 +2,28 @@
 
 namespace App\Cart\Storage;
 
-use App\Cart\Cost\CalculatorInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class HybridStorage implements StorageInterface
 {
     private ?StorageInterface   $storage = null;
-    private ArrayCollection     $items;
-    private CalculatorInterface $calculator;
 
 
     public function __construct(
         StorageInterface    $from,
-        StorageInterface    $to,
-        CalculatorInterface $calculator
+        StorageInterface    $to
     )
     {
-        $this->calculator = $calculator;
         if(null == $this->getUser()) {
             $this->storage = $from;
-            $this->items = $from->loadItems();
+            $items = $this->loadItems();
         }
         else {
             $this->storage = $to;
-            $this->items = $this->margeItems($from->loadItems(), $to->loadItems());
-            $this->save($this->items);
+            $items = $this->margeItems($from->loadItems(), $this->loadItems());
             $from->clear();
         }
+        $this->save($items);
     }
 
     public function loadItems(): ?object
@@ -46,6 +41,9 @@ class HybridStorage implements StorageInterface
         $this->storage->save($items);
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function clear(): object
     {
         return $this->storage->clear();
@@ -58,15 +56,11 @@ class HybridStorage implements StorageInterface
 
     public function margeItems(ArrayCollection $first, ArrayCollection $second): object
     {
-        $items = $this->storage->margeItems($first, $second);
-        return $items;
+        return $this->storage->margeItems($first, $second);
     }
 
-    public function addItem(string $id, int $amount): ArrayCollection
+    public function addItem(string $id, int $amount, string $title = null, float $cost = null): object
     {
-        $newItem = [$id=>$amount];
-        $items = $this->margeItems($this->loadItems(), $this->unSerialiseItems($newItem));
-        $this->save($items);
-        return $items;
+        return $this->storage->addItem($id, $amount);
     }
 }

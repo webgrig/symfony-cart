@@ -5,7 +5,6 @@ namespace Tests\Storage;
 
 use App\Cart\CartItem;
 use App\Cart\Id;
-use App\Cart\MargeItemsService;
 use App\Cart\Product;
 use App\Cart\Storage\SessionStorage;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,7 +25,7 @@ class SessionStorageTest extends KernelTestCase
         $this->_em = $_em;
         $session = new Session(new MockArraySessionStorage());
         $this->session = $session;
-        $this->storage = new SessionStorage('cart', new MargeItemsService(), $this->session, $this->_em);
+        $this->storage = new SessionStorage('cart', $this->session, $this->_em);
         parent::setUp();
     }
 

@@ -4,16 +4,13 @@ namespace Test\Cart;
 
 use App\Cart\Cart;
 use App\Cart\CartItem;
-use App\Cart\CartItemService;
 use App\Cart\Cost\SimpleCost;
-use App\Cart\DummyProductRepo;
 use App\Cart\Id;
 use App\Cart\MargeItemsService;
 use App\Cart\Product;
 use App\Cart\Storage\MemoryStorage;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 
 class ItemsServiceTest extends TestCase
@@ -57,42 +54,4 @@ class ItemsServiceTest extends TestCase
         $margeItems = new MargeItemsService();
         $this->assertEquals($result, $margeItems->margeItems($first, $second));
     }
-
-//    public function testAdd()
-//    {
-//        $this->cart->addItem(1, 3);
-//        $this->assertEquals(1, count($items = $this->cart->getItems()));
-//        $this->assertEquals(1, $items[1]->getProduct()->getId());
-//        $this->assertEquals(3, $items[1]->getAmount());
-//        $this->assertEquals(900, $items[1]->getCost());
-//    }
-//
-//    public function testAddExist()
-//    {
-//        $this->cart->addItem(1, 3);
-//        $this->cart->addItem(1, 4);
-//        $this->assertEquals(1, count($items = $this->cart->getItems()));
-//        $this->assertEquals(7, $items[1]->getAmount());
-//    }
-//
-//    public function testRemove()
-//    {
-//        $this->cart->addItem(2, 3);
-//        $this->cart->removeItem(2);
-//        $this->assertEquals([], $this->cart->getItems());
-//    }
-//
-//    public function testClear()
-//    {
-//        $this->cart->addItem(2, 3);
-//        $this->cart->clear();
-//        $this->assertEquals([], $this->cart->getItems());
-//    }
-//
-//    public function testCost()
-//    {
-//        $this->cart->addItem(1, 3);
-//        $this->cart->addItem(2, 4);
-//        $this->assertEquals(1700, $this->cart->getCost());
-//    }
 } 

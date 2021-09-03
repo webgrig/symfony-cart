@@ -4,7 +4,6 @@ namespace Test\Cart;
 
 use App\Cart\Cart;
 use App\Cart\CartItem;
-use App\Cart\MargeItemsService;
 use App\Cart\Cost\SimpleCost;
 use App\Cart\Id;
 use App\Cart\Product;
@@ -67,9 +66,11 @@ class CartTest extends KernelTestCase
 
     public function testClear()
     {
+
         $id1 = Id::next()->getValue();
         $this->cart->addItem($id1, 3, 'булка2', 2.2);
         $this->cart->clear();
+
         $this->assertEquals(new ArrayCollection(), $this->cart->getItems());
     }
 

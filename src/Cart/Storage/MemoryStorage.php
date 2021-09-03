@@ -2,22 +2,21 @@
 
 namespace App\Cart\Storage;
 
-use App\Cart\Cart;
 use App\Cart\CartItem;
-use App\Cart\Cost\CalculatorInterface;
 use App\Cart\MargeItemsService;
 use App\Cart\Product;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MemoryStorage implements StorageInterface
 {
 
     private ArrayCollection         $items;
+    private MargeItemsService      $margeItemsService;
 
     public function __construct()
     {
         $this->items = new ArrayCollection();
+        $this->margeItemsService = new MargeItemsService();
     }
 
     public function loadItems(): ?object
@@ -30,14 +29,20 @@ class MemoryStorage implements StorageInterface
         return null;
     }
 
+    /**
+     * @param ArrayCollection $items
+     */
     public function save(ArrayCollection $items): void
     {
         $this->items = $items;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function clear(): object
     {
-        return $this->items = new ArrayCollection();
+       return $this->items = new ArrayCollection();
     }
 
     public function unSerialiseItems(array $items): object
@@ -47,15 +52,14 @@ class MemoryStorage implements StorageInterface
 
     public function margeItems(ArrayCollection $first, ArrayCollection $second): object
     {
-        $margeItems = new MargeItemsService();
-        return $margeItems->margeItems($first, $second);
+        $first = null == $first ? new ArrayCollection() : $first;
+        return $this->margeItemsService->margeItems($first, $second);
     }
 
-    public function addItem(string $id, int $amount, string $title, float $cost, ArrayCollection $items = null): ArrayCollection
+    public function addItem(string $id, int $amount, string $title = null, float $cost = null): ArrayCollection
     {
-        $items = null == $items ? new ArrayCollection() : $items;
         $item = [$id => new CartItem(new Product($id, $title, $cost), $amount)];
-        $items = $this->margeItems($items, $this->unSerialiseItems($item));
+        $items = $this->margeItems($this->loadItems(), $this->unSerialiseItems($item));
         $this->save($items);
         return $items;
     }

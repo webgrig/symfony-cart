@@ -7,8 +7,6 @@ use App\Cart\Storage\StorageInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\DocBlock\Tags\Throws;
-use SebastianBergmann\Complexity\Calculator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -39,7 +37,7 @@ class Cart
 
     private ?StorageInterface   $storage = null;
 
-    private ?CalculatorInterface $calculator;
+    private ?CalculatorInterface $calculator = null;
 
     public function __construct(
         ?StorageInterface    $storage = null,
@@ -117,12 +115,14 @@ class Cart
     }
 
     /**
-     * @param $id
-     * @param $amount
+     * @param string $id
+     * @param int $amount
+     * @param string|null $title
+     * @param float|null $cost
      */
     public function addItem(string $id, int $amount, string $title = null, float $cost = null): void
     {
-        $this->items = $this->storage->addItem($id, $amount, $title, $cost, $this->items);
+        $this->items = $this->storage->addItem($id, $amount, $title, $cost);
     }
 
     /**

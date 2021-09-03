@@ -2,7 +2,6 @@
 
 namespace App\Cart\Cost;
 
-use App\Cart\CartItem;
 use Doctrine\Common\Collections\ArrayCollection;
 
 interface CalculatorInterface

@@ -3,7 +3,6 @@
 namespace App\Cart\Storage;
 
 use App\Cart\Cart;
-use App\Cart\Cost\CalculatorInterface;
 use App\Cart\MargeItemsService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,14 +19,13 @@ class SessionStorage implements StorageInterface
 
     public function __construct(
         $sessionKey,
-        MargeItemsService $margeItemsService,
         SessionInterface $session,
         EntityManagerInterface $_em
     )
     {
         $this->session = $session;
         $this->sessionKey = $sessionKey;
-        $this->margeItemsService = $margeItemsService;
+        $this->margeItemsService = new MargeItemsService();
         $this->items = $this->loadItems();
         $this->_em = $_em;
     }
@@ -50,6 +48,9 @@ class SessionStorage implements StorageInterface
         $this->items = $items;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function clear(): object
     {
         $this->session->remove($this->sessionKey);
@@ -64,6 +65,15 @@ class SessionStorage implements StorageInterface
     public function margeItems(ArrayCollection $first, ArrayCollection $second): object
     {
         return $this->margeItemsService->margeItems($first, $second);
+    }
+
+
+    public function addItem(string $id, int $amount, string $title = null, float $cost = null): ArrayCollection
+    {
+        $newItem = [$id=>$amount];
+        $items = $this->margeItems($this->loadItems(), $this->unSerialiseItems($newItem));
+        $this->save($items);
+        return $items;
     }
 
 

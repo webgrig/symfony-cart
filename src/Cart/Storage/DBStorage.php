@@ -18,11 +18,10 @@ class DBStorage implements StorageInterface
     private EntityManagerInterface $_em;
 
     public function __construct(
-        MargeItemsService       $margeItemsService,
         EntityManagerInterface  $_em
     )
     {
-        $this->margeItemsService = $margeItemsService;
+        $this->margeItemsService = new MargeItemsService();
         $this->_em = $_em;
         $this->cartRepo = $this->_em->getRepository(Cart::class);
         $this->user = $this->cartRepo->getUser();
@@ -50,6 +49,9 @@ class DBStorage implements StorageInterface
         $this->cartRepo->add($items);
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function clear(): object
     {
         $this->cartRepo->clearCart($this->user);
@@ -65,6 +67,14 @@ class DBStorage implements StorageInterface
     public function margeItems(ArrayCollection $first, ArrayCollection $second): object
     {
         return $this->margeItemsService->margeItems($first, $second);
+    }
+
+    public function addItem(string $id, int $amount, string $title = null, float $cost = null): object
+    {
+        $newItem = [$id=>$amount];
+        $items = $this->margeItems($this->loadItems(), $this->unSerialiseItems($newItem));
+        $this->save($items);
+        return $items;
     }
 
 }
